@@ -16,8 +16,12 @@
 <meta property="og:site_name" content="HaiXi的博客">
 <meta property="og:description" content="电脑安装过Node的，并且下载的插件比较多的，最好不要在下载多版本控制 一、卸载原先的Node1、从卸载程序卸载程序和功能，也可以直接右键node.js的安装包并选择卸载。 2、重新启动任务管理器杀死所有与节点相关的进程 3、从下列的目录中找到相关的内容并删除掉： 1C:\Program Files (x86)\nodejs2C:\Program Files\nodejs3C:\Users\&amp;#1">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-01-12T02:34:33.021Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;12&#x2F;lc6ULi4gvqGAC3V.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;12&#x2F;s8IMbUz6LTOkd19.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;12&#x2F;q6zYIK9DXWfhlvm.png">
+<meta property="og:updated_time" content="2020-01-12T02:51:39.969Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;12&#x2F;lc6ULi4gvqGAC3V.png">
   
     <link rel="alternative" href="/atom.xml" title="HaiXi的博客" type="application/atom+xml">
   
@@ -211,6 +215,29 @@
 <h1 id="三、切换npm安装目录"><a href="#三、切换npm安装目录" class="headerlink" title="三、切换npm安装目录"></a>三、切换npm安装目录</h1><p>在NodeJs目录下有一个node_modules，在里面创建两个目录</p>
 <p>一个是node_cache</p>
 <p>一个是node_global</p>
+<p><img src="https://i.loli.net/2020/01/12/lc6ULi4gvqGAC3V.png" alt=""></p>
+<p>使用管理员权限打开CMD，输入以下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npm config set prefix &quot;D:\nodejs\node_modules\node_global&quot;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">npm config set cache &quot;D:\nodejs\node_modules\node_cache&quot;</span></pre></td></tr></table></figure>
+
+<p>确定修改成功，输入以下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npm get prefix</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">npm get cache</span></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/01/12/s8IMbUz6LTOkd19.png" alt=""></p>
+<h1 id="四、配置global环境变量"><a href="#四、配置global环境变量" class="headerlink" title="四、配置global环境变量"></a>四、配置global环境变量</h1><p>“我的电脑–右键–属性–高级系统设置—环境变量”</p>
+<p>在Path变量里面添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">D:\nodejs\node_modules\node_global</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">注意前面要有分号</span></pre></td></tr></table></figure>
+
+<h1 id="五、设置Npm下载的镜像"><a href="#五、设置Npm下载的镜像" class="headerlink" title="五、设置Npm下载的镜像"></a>五、设置Npm下载的镜像</h1><p>设置淘宝镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npm config set registry https:&#x2F;&#x2F;registry.npm.taobao.org</span></pre></td></tr></table></figure>
+
+<p>配置后可通过下面方式来验证是否成功 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npm config get registry</span></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/01/12/q6zYIK9DXWfhlvm.png" alt=""></p>
+<p>通过cnpm使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npm install -g cnpm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org</span></pre></td></tr></table></figure>
+
+<p>以后下载可以通过cnpm下载</p>
 
       
 
@@ -367,7 +394,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、卸载原先的Node"><span class="toc-number">1.</span> <span class="toc-text">一、卸载原先的Node</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、安装nvm-windows并使用"><span class="toc-number">2.</span> <span class="toc-text">二、安装nvm-windows并使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#查看已安装的nodejs版本"><span class="toc-number">2.0.1.</span> <span class="toc-text">查看已安装的nodejs版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看可安装的nodejs版本"><span class="toc-number">2.0.2.</span> <span class="toc-text">查看可安装的nodejs版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装指定版本的nodejs"><span class="toc-number">2.0.3.</span> <span class="toc-text">安装指定版本的nodejs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用指定版本的nodejs"><span class="toc-number">2.0.4.</span> <span class="toc-text">使用指定版本的nodejs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除指定版本的nodejs"><span class="toc-number">2.0.5.</span> <span class="toc-text">删除指定版本的nodejs</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、切换npm安装目录"><span class="toc-number">3.</span> <span class="toc-text">三、切换npm安装目录</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、卸载原先的Node"><span class="toc-number">1.</span> <span class="toc-text">一、卸载原先的Node</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、安装nvm-windows并使用"><span class="toc-number">2.</span> <span class="toc-text">二、安装nvm-windows并使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#查看已安装的nodejs版本"><span class="toc-number">2.0.1.</span> <span class="toc-text">查看已安装的nodejs版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看可安装的nodejs版本"><span class="toc-number">2.0.2.</span> <span class="toc-text">查看可安装的nodejs版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装指定版本的nodejs"><span class="toc-number">2.0.3.</span> <span class="toc-text">安装指定版本的nodejs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用指定版本的nodejs"><span class="toc-number">2.0.4.</span> <span class="toc-text">使用指定版本的nodejs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除指定版本的nodejs"><span class="toc-number">2.0.5.</span> <span class="toc-text">删除指定版本的nodejs</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、切换npm安装目录"><span class="toc-number">3.</span> <span class="toc-text">三、切换npm安装目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#四、配置global环境变量"><span class="toc-number">4.</span> <span class="toc-text">四、配置global环境变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#五、设置Npm下载的镜像"><span class="toc-number">5.</span> <span class="toc-text">五、设置Npm下载的镜像</span></a></li></ol>
                     </div>
                 </span>
             </div>
