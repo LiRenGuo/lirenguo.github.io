@@ -151,6 +151,250 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Centos7安装ELK环境" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/15/Centos7%E5%AE%89%E8%A3%85ELK%E7%8E%AF%E5%A2%83/">Centos7安装ELK环境</a>
+    </h1>
+  
+
+        
+        <a href="/2020/06/15/Centos7%E5%AE%89%E8%A3%85ELK%E7%8E%AF%E5%A2%83/" class="archive-article-date">
+  	<time datetime="2020-06-15T03:09:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="ELK简介"><a href="#ELK简介" class="headerlink" title="ELK简介"></a>ELK简介</h1><p>ELK是一个日志分析平台，它主要由Elasticsearch、Logstash和Kibana三个部分组成。<br>Elasticsearch是一个开源的全文搜索和分析引擎，它可以实现数据的实时全文搜索，可以处理大规模日志数据，比如Nginx、Tomcat、系统日志等功能。<br>Logstash负责日志收集和转发，支持日志过滤，支持普通log、自定义json格式的日志解析。<br>Kibana通过接口调用Elasticsearch的数据，并进行前端数据可视化。</p>
+<h2 id="一、环境准备"><a href="#一、环境准备" class="headerlink" title="一、环境准备"></a>一、环境准备</h2><p>默认环境ROOT用户下进行操作，其他用户操作的请使sudo命令</p>
+<p>1、安装JDK，参考 <a href="https://lirenguo.github.io/2019/12/03/Linux-OpenJDK%E5%AE%89%E8%A3%85/">《Linux OpenJDK安装》</a></p>
+<p>2、关闭防火墙。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# systemctl stop firewalld</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# systemctl disable firewalld</span></pre></td></tr></table></figure>
+
+<p>或者设置防火墙规则：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# firewall-cmd --add-port&#x3D;9200&#x2F;tcp --permanent</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# firewall-cmd --add-port&#x3D;9300&#x2F;tcp --permanent</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# firewall-cmd --add-port&#x3D;5601&#x2F;tcp --permanent</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# firewall-cmd --reload</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# firewall-cmd --permanent --zone&#x3D;public --list-ports #显示以上三个端口，表示防火墙已经开启</span></pre></td></tr></table></figure>
+
+<p>3、导入Elasticsearch GPG KEY</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">rpm --import https:&#x2F;&#x2F;artifacts.elastic.co&#x2F;GPG-KEY-elasticsearch</span></pre></td></tr></table></figure>
+
+<p>4、添加ELK仓库（该仓库使用清华的yum源镜像）</p>
+<p>默认安装最新版本，如需要指定版本，请将版本号改为指定版本号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# cd &#x2F;etc&#x2F;yum.repos.d</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 &#x2F;etc&#x2F;yum.repos.d]# vi elasticsearch.repo</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">编写内容：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">[elasticsearch-7.x]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">name&#x3D;Elasticsearch repository for 7.x packages</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">baseurl&#x3D;https:&#x2F;&#x2F;mirror.tuna.tsinghua.edu.cn&#x2F;elasticstack&#x2F;7.x&#x2F;yum&#x2F;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">gpgcheck&#x3D;1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">gpgkey&#x3D;https:&#x2F;&#x2F;artifacts.elastic.co&#x2F;GPG-KEY-elasticsearch</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">enabled&#x3D;1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">autorefresh&#x3D;1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">type&#x3D;rpm-md</span></pre></td></tr></table></figure>
+
+<p>5、更新yum包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# yum clean all</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# yum makecache</span></pre></td></tr></table></figure>
+
+<h1 id="二、安装Elasticsearch"><a href="#二、安装Elasticsearch" class="headerlink" title="二、安装Elasticsearch"></a>二、安装Elasticsearch</h1><p>1、安装Elasticsearch</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# yum install -y elasticsearch</span></pre></td></tr></table></figure>
+
+<p>2、确认Elasticsearch的安装信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# rpm -qi elasticsearch</span></pre></td></tr></table></figure>
+
+<p>3、启动Elasticsearch并设置开机启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# systemctl daemon-reload</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# systemctl start elasticsearch.service</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# systemctl enable elasticsearch.service</span></pre></td></tr></table></figure>
+
+<p>4、查看Elasticsearch运行状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">[root@192.168.2.120 ~]# systemctl status elasticsearch.service</span></pre></td></tr></table></figure>
+
+<p>5、尝试请求<br><code>curl localhost:9200</code></p>
+<p>6、设置允许其他机器访问</p>
+<p>当前只能响应本机的请求，想要其他机器也能访问的话，那么需要修改elasticsearch的配置。<code>vim /etc/elasticsearch/elasticsearch.yml</code>，如下修改（ps：以下修改属性不能少一个，不然你就启动不了哦<del>~</del>）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"># line 17, uncomment</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">cluster.name: my-application</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"># line 22, uncomment and change</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">node.name: node-1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"># line 55, uncomment and change</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">network.host: 0.0.0.0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"># line 59, uncomment</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">ttp.port: 9200</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"># line 72, uncomment and change</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">cluster.initial_master_nodes: [&quot;node-1&quot;]</span></pre></td></tr></table></figure>
+
+<p>7、重启Elasticsearch</p>
+<p><code>systemctl restart elasticsearch.service</code></p>
+<p>8、查看启动状态</p>
+<p><code>systemctl status elasticsearch.service</code></p>
+<p>9、使用外部浏览器访问IP:9200即可看到以下情况，至此ElasticSearch：<img src="https://i.loli.net/2020/06/15/nD8ZS6gb9Me3dQU.png" alt=""></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">centos7</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Elasticsearch</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Logstash</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Kibana</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/06/15/Centos7%E5%AE%89%E8%A3%85ELK%E7%8E%AF%E5%A2%83/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Hadoop学习笔记-Hadoop集群搭建" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/17/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-Hadoop%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/">Hadoop学习笔记-Hadoop集群搭建</a>
+    </h1>
+  
+
+        
+        <a href="/2020/03/17/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-Hadoop%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" class="archive-article-date">
+  	<time datetime="2020-03-17T07:12:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1、前期准备"><a href="#1、前期准备" class="headerlink" title="1、前期准备"></a>1、前期准备</h1><h2 id="1-1、准备3台（不等）服务器，每台服务器均可上网，分别是："><a href="#1-1、准备3台（不等）服务器，每台服务器均可上网，分别是：" class="headerlink" title="1.1、准备3台（不等）服务器，每台服务器均可上网，分别是："></a>1.1、准备3台（不等）服务器，每台服务器均可上网，分别是：</h2><table>
+<thead>
+<tr>
+<th align="center">服务器名称</th>
+<th align="center">IP地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Hadoop000（主节点）</td>
+<td align="center">192.168.2.113</td>
+</tr>
+<tr>
+<td align="center">Hadoop001</td>
+<td align="center">192.168.2.114</td>
+</tr>
+<tr>
+<td align="center">Hadoop002</td>
+<td align="center">192.168.2.115</td>
+</tr>
+</tbody></table>
+<p>IP地址不一定一致，服务器名称也可以不一致</p>
+<h2 id="1-2、修改每台服务器的hostname："><a href="#1-2、修改每台服务器的hostname：" class="headerlink" title="1.2、修改每台服务器的hostname："></a>1.2、修改每台服务器的hostname：</h2><h3 id="1-2-1、对Hadoop000服务器的修改"><a href="#1-2-1、对Hadoop000服务器的修改" class="headerlink" title="1.2.1、对Hadoop000服务器的修改"></a>1.2.1、对Hadoop000服务器的修改</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">-------------------------------------------------</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ vi &#x2F;etc&#x2F;hostname</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">输入：hadoop000</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;etc&#x2F;hostname</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">显示：hadoop000即修改成功</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">-------------------------------------------------</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">$ vi &#x2F;etc&#x2F;hosts</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">输入：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">192.168.2.113 hadoop000</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">192.168.2.114 hadoop001</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">192.168.2.115 hadoop002</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">192.168.2.113 localhost</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;etc&#x2F;hosts</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">显示：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">192.168.2.113 hadoop000</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">192.168.2.114 hadoop001</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">192.168.2.115 hadoop002</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">192.168.2.113 localhost</span></pre></td></tr></table></figure>
+
+<h3 id="1-2-3、对Hadoop001服务器名称的修改"><a href="#1-2-3、对Hadoop001服务器名称的修改" class="headerlink" title="1.2.3、对Hadoop001服务器名称的修改"></a>1.2.3、对Hadoop001服务器名称的修改</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">-------------------------------------------------</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ vi &#x2F;etc&#x2F;hostname</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">输入：hadoop001</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;etc&#x2F;hostname</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">显示：hadoop001即修改成功</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">-------------------------------------------------</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">$ vi &#x2F;etc&#x2F;hosts</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">输入：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">192.168.2.113 hadoop000</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">192.168.2.114 hadoop001</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">192.168.2.115 hadoop002</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">192.168.2.114 localhost</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;etc&#x2F;hosts</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">显示：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">192.168.2.113 hadoop000</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">192.168.2.114 hadoop001</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">192.168.2.115 hadoop002</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">192.168.2.114 localhost</span></pre></td></tr></table></figure>
+
+<p>1.2.4、对Hadoop002服务器名称的修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">-------------------------------------------------</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ vi &#x2F;etc&#x2F;hostname</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">输入：hadoop002</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;etc&#x2F;hostname</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">显示：hadoop002即修改成功</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">-------------------------------------------------</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">$ vi &#x2F;etc&#x2F;hosts</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">输入：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">192.168.2.113 hadoop000</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">192.168.2.114 hadoop001</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">192.168.2.115 hadoop002</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">192.168.2.115 localhost</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;etc&#x2F;hosts</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">显示：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">192.168.2.113 hadoop000</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">192.168.2.114 hadoop001</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">192.168.2.115 hadoop002</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">192.168.2.115 localhost</span></pre></td></tr></table></figure>
+
+<h1 id="2、前置安装"><a href="#2、前置安装" class="headerlink" title="2、前置安装"></a>2、前置安装</h1><h2 id="2-1、安装-ssh"><a href="#2-1、安装-ssh" class="headerlink" title="2.1、安装 ssh"></a>2.1、安装 ssh</h2><p>对每台机器执行，ssh免密码登陆：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span></pre></td></tr></table></figure>
+
+<p>在hadoop000机器上进行操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ssh-copy-id -i ~&#x2F;.ssh&#x2F;id_rsa.pub hadoop000</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">ssh-copy-id -i ~&#x2F;.ssh&#x2F;id_rsa.pub hadoop001</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">ssh-copy-id -i ~&#x2F;.ssh&#x2F;id_rsa.pub hadoop002</span></pre></td></tr></table></figure>
+
+<p>测试是否成功，在Hadoop000机器上：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ssh hadoop@hadoop000</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">ssh hadoop@hadoop001</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">ssh hadoop@hadoop002</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">测试成功结果：无须密码，就可以进去</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">测试失败结果：需要输入密码</span></pre></td></tr></table></figure>
+
+<h2 id="2-2、JDK安装"><a href="#2-2、JDK安装" class="headerlink" title="2.2、JDK安装"></a>2.2、JDK安装</h2>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Hadoop</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Centon7</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/03/17/Hadoop%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-Hadoop%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Windows安装Flutter运行环境" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -381,169 +625,9 @@
 
 
   
-    <article id="post-Spring-Security-Oauth2从零开始实践（一）认证授权服务器" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/30/Spring-Security-Oauth2%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AE%9E%E8%B7%B5%EF%BC%88%E4%B8%80%EF%BC%89%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1%E5%99%A8/">Spring Security Oauth2从零开始实践（一）认证授权服务器</a>
-    </h1>
-  
-
-        
-        <a href="/2019/12/30/Spring-Security-Oauth2%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AE%9E%E8%B7%B5%EF%BC%88%E4%B8%80%EF%BC%89%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="archive-article-date">
-  	<time datetime="2019-12-30T05:40:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="一、结构基础"><a href="#一、结构基础" class="headerlink" title="一、结构基础"></a>一、结构基础</h1><p><strong>基础框架：</strong>Spring Boot + Spring-Security-OAuth2<br><strong>存储介质：</strong>Mysql<br><strong>持久化方式：</strong>Spring-data-jpa<br><strong>测试工具：</strong>Postman</p>
-<p><strong>大局观：</strong><br>1、OAuth2服务器分为两部分组成：认证授权服务器和资源服务器。闻名知意，不解释。本文只讲认证授权服务器的搭建，资源服务器部分后续。</p>
-<p>2、认证授权服务器分为两大步骤，一是认证，二是授权。而认证则主要由Spring-Security负责，而授权则有Oauth2负责。</p>
-        
-          <a class="article-more-a" href="/2019/12/30/Spring-Security-Oauth2%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AE%9E%E8%B7%B5%EF%BC%88%E4%B8%80%EF%BC%89%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1%E5%99%A8/#more">查看更多 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">SpringSecurity</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Oauth2</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/12/30/Spring-Security-Oauth2%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AE%9E%E8%B7%B5%EF%BC%88%E4%B8%80%EF%BC%89%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1%E5%99%A8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-SprinhSecurity问题详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/26/SprinhSecurity%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/">SprinhSecurity问题详解</a>
-    </h1>
-  
-
-        
-        <a href="/2019/12/26/SprinhSecurity%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/" class="archive-article-date">
-  	<time datetime="2019-12-26T08:01:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="一、Spring-Security-Oauth2-搭建授权服务器遇到的问题详解"><a href="#一、Spring-Security-Oauth2-搭建授权服务器遇到的问题详解" class="headerlink" title="一、Spring Security Oauth2 搭建授权服务器遇到的问题详解"></a>一、Spring Security Oauth2 搭建授权服务器遇到的问题详解</h1><h2 id="（一）嵌套异常Java-lang-StackOverflowError"><a href="#（一）嵌套异常Java-lang-StackOverflowError" class="headerlink" title="（一）嵌套异常Java.lang.StackOverflowError"></a>（一）嵌套异常Java.lang.StackOverflowError</h2><p><strong>问题截图：</strong></p>
-<p><strong>postman截图：</strong></p>
-<p><img src="https://i.loli.net/2019/12/26/SVWYA15eb9iEuKO.png" alt=""></p>
-        
-          <a class="article-more-a" href="/2019/12/26/SprinhSecurity%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/#more">查看更多 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">SpringBoot</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/12/26/SprinhSecurity%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">下一页 »</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">下一页 »</a>
     </nav>
   
 
@@ -645,11 +729,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+                <a href="javascript:void(0)" class="js-tag color3">centos7</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color4">Elasticsearch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Logstash</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kibana</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -657,11 +749,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">centos7</a>
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Hadoop</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Centon7</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -689,11 +797,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">MongoDB</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Node</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">MongoDB</a>
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -701,15 +813,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">JMeter</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>Spring Security Oauth2从零开始实践（一）认证授权服务器 | HaiXi的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一、结构基础基础框架：Spring Boot + Spring-Security-OAuth2存储介质：Mysql持久化方式：Spring-data-jpa测试工具：Postman 大局观：1、OAuth2服务器分为两部分组成：认证授权服务器和资源服务器。闻名知意，不解释。本文只讲认证授权服务器的搭建，资源服务器部分后续。 2、认证授权服务器分为两大步骤，一是认证，二是授权。而认证则主要由Spri">
+  <meta name="description" content="一、结构基础基础框架：Spring Boot + Spring-Security-OAuth2存储介质：Mysql持久化方式：Spring-data-jpa测试工具：Postman框架版本：SpringBoot：2.1.6    SpringCloud：Greenwich.SR1 大局观：1、OAuth2服务器分为两部分组成：认证授权服务器和资源服务器。闻名知意，不解释。本文只讲认证授权服务器的搭">
 <meta name="keywords" content="SpringSecurity,Oauth2">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Security Oauth2从零开始实践（一）认证授权服务器">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;30&#x2F;Spring-Security-Oauth2%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AE%9E%E8%B7%B5%EF%BC%88%E4%B8%80%EF%BC%89%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1%E5%99%A8&#x2F;index.html">
 <meta property="og:site_name" content="HaiXi的博客">
-<meta property="og:description" content="一、结构基础基础框架：Spring Boot + Spring-Security-OAuth2存储介质：Mysql持久化方式：Spring-data-jpa测试工具：Postman 大局观：1、OAuth2服务器分为两部分组成：认证授权服务器和资源服务器。闻名知意，不解释。本文只讲认证授权服务器的搭建，资源服务器部分后续。 2、认证授权服务器分为两大步骤，一是认证，二是授权。而认证则主要由Spri">
+<meta property="og:description" content="一、结构基础基础框架：Spring Boot + Spring-Security-OAuth2存储介质：Mysql持久化方式：Spring-data-jpa测试工具：Postman框架版本：SpringBoot：2.1.6    SpringCloud：Greenwich.SR1 大局观：1、OAuth2服务器分为两部分组成：认证授权服务器和资源服务器。闻名知意，不解释。本文只讲认证授权服务器的搭">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;02&#x2F;fVFIZsoathwU8xl.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;02&#x2F;5l9DjR4weaTFSYt.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;02&#x2F;rFLcOfW59P8xdaJ.png">
-<meta property="og:updated_time" content="2020-01-10T14:52:08.072Z">
+<meta property="og:updated_time" content="2020-05-02T05:19:53.536Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;02&#x2F;fVFIZsoathwU8xl.png">
   
@@ -177,14 +177,15 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="一、结构基础"><a href="#一、结构基础" class="headerlink" title="一、结构基础"></a>一、结构基础</h1><p><strong>基础框架：</strong>Spring Boot + Spring-Security-OAuth2<br><strong>存储介质：</strong>Mysql<br><strong>持久化方式：</strong>Spring-data-jpa<br><strong>测试工具：</strong>Postman</p>
+        <h1 id="一、结构基础"><a href="#一、结构基础" class="headerlink" title="一、结构基础"></a>一、结构基础</h1><p><strong>基础框架：</strong>Spring Boot + Spring-Security-OAuth2<br><strong>存储介质：</strong>Mysql<br><strong>持久化方式：</strong>Spring-data-jpa<br><strong>测试工具：</strong>Postman<br><strong>框架版本：</strong>SpringBoot：2.1.6    SpringCloud：Greenwich.SR1</p>
 <p><strong>大局观：</strong><br>1、OAuth2服务器分为两部分组成：认证授权服务器和资源服务器。闻名知意，不解释。本文只讲认证授权服务器的搭建，资源服务器部分后续。</p>
 <p>2、认证授权服务器分为两大步骤，一是认证，二是授权。而认证则主要由Spring-Security负责，而授权则有Oauth2负责。</p>
 <a id="more"></a>
 
-<h1 id="二、application配置文件"><a href="#二、application配置文件" class="headerlink" title="二、application配置文件"></a>二、application配置文件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">#关于Thymeleaf的配置</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">spring.thymeleaf.mode&#x3D;HTML5</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">spring.thymeleaf.encoding&#x3D;UTF-8</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">spring.thymeleaf.cache&#x3D;false</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">#关于Mariadb数据库的链接属性</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">spring.datasource.url&#x3D;jdbc:mariadb:&#x2F;&#x2F;localhost:3306&#x2F;oauth2?useUnicode&#x3D;true&amp;characterEncoding&#x3D;utf-8&amp;useSSL&#x3D;false</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">spring.datasource.username&#x3D;root</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">spring.datasource.password&#x3D;123456</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">#允许bean的覆盖</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">spring.main.allow-bean-definition-overriding&#x3D;true</span></pre></td></tr></table></figure>
+<h1 id="二、application配置文件"><a href="#二、application配置文件" class="headerlink" title="二、application配置文件"></a>二、application配置文件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">#关于Thymeleaf的配置</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">spring.thymeleaf.mode&#x3D;HTML5</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">spring.thymeleaf.encoding&#x3D;UTF-8</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">spring.thymeleaf.cache&#x3D;false</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">#关于Mariadb数据库的链接属性</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">spring.datasource.url&#x3D;jdbc:mariadb:&#x2F;&#x2F;localhost:3306&#x2F;oauth2？useUnicode&#x3D;true&amp;characterEncoding&#x3D;utf-8&amp;useSSL&#x3D;false</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">spring.datasource.username&#x3D;root</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">spring.datasource.password&#x3D;123456</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">#允许bean的覆盖</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">spring.main.allow-bean-definition-overriding&#x3D;true</span></pre></td></tr></table></figure>
 
-<h1 id="三、添加POM文件"><a href="#三、添加POM文件" class="headerlink" title="三、添加POM文件"></a>三、添加POM文件</h1><p>SpringSecurity Oauth2依赖</p>
+<h1 id="三、添加POM文件"><a href="#三、添加POM文件" class="headerlink" title="三、添加POM文件"></a>三、添加POM文件</h1><p>添加POM文件之前需要添加SpringCloud版本</p>
+<p>SpringSecurity Oauth2依赖</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    &lt;artifactId&gt;spring-boot-starter-oauth2-client&lt;&#x2F;artifactId&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">&lt;&#x2F;dependency&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    &lt;artifactId&gt;spring-boot-starter-oauth2-resource-server&lt;&#x2F;artifactId&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">&lt;&#x2F;dependency&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    &lt;groupId&gt;org.springframework.cloud&lt;&#x2F;groupId&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    &lt;artifactId&gt;spring-cloud-starter-oauth2&lt;&#x2F;artifactId&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">&lt;&#x2F;dependency&gt;</span></pre></td></tr></table></figure>
 
 <p>SpringSecurity依赖</p>
@@ -214,13 +215,13 @@
 <p>主要配置安全文件，比如那个路径是不需要进行授权的，</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">http.authorizeRequests()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">                .antMatchers(<span class="string">"/login"</span>, <span class="string">"/login/**"</span>, <span class="string">"/oauth/**"</span>, <span class="string">"/token/**"</span>, <span class="string">"/error"</span>, <span class="string">"/401"</span>).permitAll()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">                .anyRequest().authenticated()</span></pre></td></tr></table></figure>
 
-<p>这端话的意思是，<strong>http.授权请求().路径匹配器(“各个路径”….).允许不进行授权().其他请求().都要授权()</strong></p>
+<p>这段话的意思是，<strong>http.授权请求().路径匹配器(“各个路径”….).允许不进行授权().其他请求().都要授权()</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">.formLogin().loginPage(<span class="string">"/login"</span>).failureUrl(<span class="string">"/login-error"</span>).permitAll()</span></pre></td></tr></table></figure>
 
-<p>这段话的意思是，<strong>.进行form表单登陆().登陆的页面是(“/login这个路劲”).登陆失败(“跳到这个路径”).允许不授权()</strong></p>
+<p>这段话的意思是，<strong>.进行form表单登陆().登陆的页面是(“/login这个路劲”).登陆失败(“跳到这个路径”).允许登录路径不授权()</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">.logout().logoutSuccessUrl(<span class="string">"/"</span>).and().csrf().disable();</span></pre></td></tr></table></figure>
 
-<p>这段话的意思是，<strong>.登出().登出成功的URL（“路径”）.并且().csrf().关闭()</strong></p>
+<p>这段话的意思是，<strong>.登出().登出成功的URL（“路径”）.并且().跨站请求().关闭()</strong></p>
 <p><strong>（2）public void configureGlobal(AuthenticationManagerBuilder auth)</strong></p>
 <p>注入校验用户登陆是否成功的处理器</p>
 <h2 id="（三）编写MyUserDetailsService，用于处理用户信息"><a href="#（三）编写MyUserDetailsService，用于处理用户信息" class="headerlink" title="（三）编写MyUserDetailsService，用于处理用户信息"></a>（三）编写MyUserDetailsService，用于处理用户信息</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyUserDetailsService</span> <span class="keyword">implements</span> <span class="title">UserDetailsService</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Autowired</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">private</span> UserRepository userRepository;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Autowired</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">private</span> RoleRepository roleRepository;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Override</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> UserDetails <span class="title">loadUserByUsername</span><span class="params">(String username)</span> <span class="keyword">throws</span> UsernameNotFoundException </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">// 查询数据库</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">        Optional&lt;User&gt; userOptional = userRepository.findByUsername(username);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">        User user = <span class="keyword">null</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> (userOptional.isPresent()) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">            user = userOptional.get();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">            List&lt;Role&gt; roleList = roleRepository.getRoleByUserid(user.getId());</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">            <span class="comment">/*user.setAuthorities(roleList);</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"><span class="comment">            return user;*/</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">            List&lt;SimpleGrantedAuthority&gt; authorities = getAuthorities(roleList);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> org.springframework.security.core.userdetails.User(username, user.getPassword(), authorities);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">        &#125; <span class="keyword">else</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">            log.error(<span class="string">"用户不存在"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> UsernameNotFoundException(String.format(<span class="string">"User %s does not exist!"</span>, username));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">private</span> List&lt;SimpleGrantedAuthority&gt; <span class="title">getAuthorities</span><span class="params">(List&lt;Role&gt; roles)</span> </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">        List&lt;SimpleGrantedAuthority&gt; authList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> (!CollectionUtils.isEmpty(roles)) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">for</span> (Role role : roles) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">                authList.add(<span class="keyword">new</span> SimpleGrantedAuthority(role.getName()));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> authList;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
@@ -395,7 +396,7 @@
     </a>
   
   
-    <a href="/2019/12/26/SprinhSecurity%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2019/12/26/Spring-Security%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">SprinhSecurity问题详解</div>
       <i class="icon-circle-right"></i>
     </a>
@@ -552,11 +553,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+                <a href="javascript:void(0)" class="js-tag color3">centos7</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color4">Elasticsearch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Logstash</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kibana</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -564,11 +573,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">centos7</a>
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Hadoop</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Centon7</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -596,11 +621,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">MongoDB</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Node</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">MongoDB</a>
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -608,15 +637,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">JMeter</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">

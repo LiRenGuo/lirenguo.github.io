@@ -151,6 +151,166 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Spring-Security-Oauth2从零开始实践（一）认证授权服务器" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/30/Spring-Security-Oauth2%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AE%9E%E8%B7%B5%EF%BC%88%E4%B8%80%EF%BC%89%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1%E5%99%A8/">Spring Security Oauth2从零开始实践（一）认证授权服务器</a>
+    </h1>
+  
+
+        
+        <a href="/2019/12/30/Spring-Security-Oauth2%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AE%9E%E8%B7%B5%EF%BC%88%E4%B8%80%EF%BC%89%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="archive-article-date">
+  	<time datetime="2019-12-30T05:40:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、结构基础"><a href="#一、结构基础" class="headerlink" title="一、结构基础"></a>一、结构基础</h1><p><strong>基础框架：</strong>Spring Boot + Spring-Security-OAuth2<br><strong>存储介质：</strong>Mysql<br><strong>持久化方式：</strong>Spring-data-jpa<br><strong>测试工具：</strong>Postman<br><strong>框架版本：</strong>SpringBoot：2.1.6    SpringCloud：Greenwich.SR1</p>
+<p><strong>大局观：</strong><br>1、OAuth2服务器分为两部分组成：认证授权服务器和资源服务器。闻名知意，不解释。本文只讲认证授权服务器的搭建，资源服务器部分后续。</p>
+<p>2、认证授权服务器分为两大步骤，一是认证，二是授权。而认证则主要由Spring-Security负责，而授权则有Oauth2负责。</p>
+        
+          <a class="article-more-a" href="/2019/12/30/Spring-Security-Oauth2%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AE%9E%E8%B7%B5%EF%BC%88%E4%B8%80%EF%BC%89%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1%E5%99%A8/#more">查看更多 >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">SpringSecurity</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Oauth2</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/12/30/Spring-Security-Oauth2%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AE%9E%E8%B7%B5%EF%BC%88%E4%B8%80%EF%BC%89%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83%E6%9C%8D%E5%8A%A1%E5%99%A8/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Spring-Security问题详解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/26/Spring-Security%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/">SprinhSecurity问题详解</a>
+    </h1>
+  
+
+        
+        <a href="/2019/12/26/Spring-Security%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/" class="archive-article-date">
+  	<time datetime="2019-12-26T08:01:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、Spring-Security-Oauth2-搭建授权服务器遇到的问题详解"><a href="#一、Spring-Security-Oauth2-搭建授权服务器遇到的问题详解" class="headerlink" title="一、Spring Security Oauth2 搭建授权服务器遇到的问题详解"></a>一、Spring Security Oauth2 搭建授权服务器遇到的问题详解</h1><h2 id="（一）嵌套异常Java-lang-StackOverflowError"><a href="#（一）嵌套异常Java-lang-StackOverflowError" class="headerlink" title="（一）嵌套异常Java.lang.StackOverflowError"></a>（一）嵌套异常Java.lang.StackOverflowError</h2><p><strong>问题截图：</strong></p>
+<p><strong>postman截图：</strong></p>
+<p><img src="https://i.loli.net/2019/12/26/SVWYA15eb9iEuKO.png" alt=""></p>
+        
+          <a class="article-more-a" href="/2019/12/26/Spring-Security%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/#more">查看更多 >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">SpringBoot</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/12/26/Spring-Security%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-压力测试开发手册-JMeter5调优" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -238,19 +398,19 @@
 
 
   
-    <article id="post-压力测试开发手册-Jmeter初体验" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-压力测试开发手册-JMeter初体验" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/24/%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Jmeter%E5%88%9D%E4%BD%93%E9%AA%8C/">压力测试开发手册-Jmeter初体验</a>
+      <a class="article-title" href="/2019/12/24/%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-JMeter%E5%88%9D%E4%BD%93%E9%AA%8C/">压力测试开发手册-Jmeter初体验</a>
     </h1>
   
 
         
-        <a href="/2019/12/24/%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Jmeter%E5%88%9D%E4%BD%93%E9%AA%8C/" class="archive-article-date">
+        <a href="/2019/12/24/%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-JMeter%E5%88%9D%E4%BD%93%E9%AA%8C/" class="archive-article-date">
   	<time datetime="2019-12-24T02:34:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-24</time>
 </a>
         
@@ -263,7 +423,7 @@
 <h2 id="（二）JDK安装步骤："><a href="#（二）JDK安装步骤：" class="headerlink" title="（二）JDK安装步骤："></a>（二）JDK安装步骤：</h2><p>参考链接：<a href="http://www.win10xiazai.com/win10/5744.html">http://www.win10xiazai.com/win10/5744.html</a></p>
 <h2 id="（三）JMeter安装步骤："><a href="#（三）JMeter安装步骤：" class="headerlink" title="（三）JMeter安装步骤："></a>（三）JMeter安装步骤：</h2><p>前置条件：确认JDK已经完好安装，配置了JDK的环境变量</p>
         
-          <a class="article-more-a" href="/2019/12/24/%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Jmeter%E5%88%9D%E4%BD%93%E9%AA%8C/#more">查看更多 >></a>
+          <a class="article-more-a" href="/2019/12/24/%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-JMeter%E5%88%9D%E4%BD%93%E9%AA%8C/#more">查看更多 >></a>
         
       
 
@@ -291,7 +451,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/12/24/%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-Jmeter%E5%88%9D%E4%BD%93%E9%AA%8C/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/12/24/%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C-JMeter%E5%88%9D%E4%BD%93%E9%AA%8C/">展开全文 >></a>
         </p>
       
 
@@ -407,183 +567,9 @@
 
 
   
-    <article id="post-Windows10-本地部署Easy-Mock" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/17/Windows10-%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2Easy-Mock/">Windows 本地部署Easy-Mock</a>
-    </h1>
-  
-
-        
-        <a href="/2019/12/17/Windows10-%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2Easy-Mock/" class="archive-article-date">
-  	<time datetime="2019-12-17T02:31:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="一、什么是Easy-Mock"><a href="#一、什么是Easy-Mock" class="headerlink" title="一、什么是Easy Mock"></a>一、什么是Easy Mock</h1><p>Easy Mock 是一个可视化，并且能快速生成<strong>模拟数据</strong>的持久化服务。</p>
-<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><ul>
-<li>支持接口代理</li>
-<li>支持快捷键操作</li>
-<li>支持协同编辑</li>
-<li>支持团队项目</li>
-<li>支持 RESTful</li>
-<li>支持 <a href="https://swagger.io">Swagger</a> | OpenAPI Specification (<a href="https://github.com/OAI/OpenAPI-Specification/blob/master/versions/1.2.md">1.2</a> &amp; <a href="https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md">2.0</a> &amp; <a href="https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md">3.0</a>)<ul>
-<li>基于 Swagger 快速创建项目</li>
-<li>支持显示接口入参与返回值</li>
-<li>支持显示实体类</li>
-</ul>
-</li>
-<li>支持灵活性与扩展性更高的响应式数据开发</li>
-<li>支持自定义响应配置（例：status/headers/cookies）</li>
-<li>支持 <a href="http://mockjs.com/">Mock.js</a> 语法</li>
-<li>支持 <a href="https://github.com/ElemeFE/restc">restc</a> 方式的接口预览</li>
-</ul>
-        
-          <a class="article-more-a" href="/2019/12/17/Windows10-%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2Easy-Mock/#more">查看更多 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Windows</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/12/17/Windows10-%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2Easy-Mock/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Windows10-安装Redis" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/16/Windows10-%E5%AE%89%E8%A3%85Redis/">Windows10 安装Redis</a>
-    </h1>
-  
-
-        
-        <a href="/2019/12/16/Windows10-%E5%AE%89%E8%A3%85Redis/" class="archive-article-date">
-  	<time datetime="2019-12-16T11:48:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="一、Redis安装"><a href="#一、Redis安装" class="headerlink" title="一、Redis安装"></a>一、Redis安装</h1><p>Redis类似，在<a href="https://github.com/MSOpenTech/redis/releases">Github-release</a>下载一个msi版本安装，一直下一步；</p>
-<h1 id="二、添加路径"><a href="#二、添加路径" class="headerlink" title="二、添加路径"></a>二、添加路径</h1><p>添加安装路径<code>D:\Redis</code>到系统变量里</p>
-        
-          <a class="article-more-a" href="/2019/12/16/Windows10-%E5%AE%89%E8%A3%85Redis/#more">查看更多 >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Windows</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/12/16/Windows10-%E5%AE%89%E8%A3%85Redis/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">« 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">下一页 »</a>
+      <a class="extend prev" rel="prev" href="/">« 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">下一页 »</a>
     </nav>
   
 
@@ -685,11 +671,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
+                <a href="javascript:void(0)" class="js-tag color3">centos7</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color4">Elasticsearch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Logstash</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Kibana</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -697,11 +691,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">centos7</a>
+                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Hadoop</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Centon7</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Flutter</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -729,11 +739,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">MongoDB</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Node</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">MongoDB</a>
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -741,15 +755,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Docker</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">JMeter</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
